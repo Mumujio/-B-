@@ -1,4 +1,4 @@
-import { requestWeather } from './axios'
+import { requestWeather,requestData,requestReal,requestLogin } from './axios'
 // 请求实时天气
 export const requestCurrentWeatherInfo = () => {
     return requestWeather({
@@ -25,3 +25,41 @@ export const requestFutureWeatherInfo = () => {
         }
     })
 }
+
+// 请求湖北省数据
+export const requestHuBeiData = (url) => {
+    return requestData({
+        url,
+        method:'get',
+
+    })
+}
+
+// 1.
+export const requestProjectData = (path) => {
+    return requestReal({
+        url:path,
+        method:'get',
+    })
+}
+
+
+export const requestLoginInfo = (data) => {
+    return requestLogin({
+        url: 'http://jfdt5t.natappfree.cc/user/login',
+        method: 'post',
+        data
+    })
+}
+
+export const getUserInfos = (data) => {
+    return requestLogin({
+        url: 'http://jfdt5t.natappfree.cc/api/getUserInfo',
+        method: 'post',
+        data
+    })
+}
+
+
+
+

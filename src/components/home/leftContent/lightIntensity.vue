@@ -6,27 +6,38 @@
 </template>
 
 <script setup>
-import { inject, onMounted, reactive, ref } from "vue";
+import { inject, onMounted, reactive, ref, onBeforeUnmount } from "vue";
 let echarts = inject("echarts");
-
+const props = defineProps(["projectData"]);
 const mychartDom = ref(null);
 let mychart = null;
 const chart = reactive({
   option: {},
 });
+// const { proxy } = getCurrentInstance();
+// proxy.$EventBus.on("light_strength", (data) => {
+//   light_change(data);
+// });
+
+// const light_change = (data) => {};
 const chartPrepare = () => {
   mychart = echarts.init(mychartDom.value);
 };
 const chartOpen = () => {
   chart.option = {
     xAxis: {
-      max: 20,
+      max: 24,
       min: 16,
+      splitNumber: 9,
+      axisLine: {
+        show: false,
+      },
     },
     yAxis: {
       splitLine: {
         show: false,
       },
+      splitNumber: 6,
     },
     series: [
       {
@@ -37,6 +48,10 @@ const chartOpen = () => {
           [18, 100],
           [19, 72],
           [20, 87],
+          [21, 72],
+          [22, 87],
+          [23, 72],
+          [24, 87],
         ],
         type: "line",
         // 平滑过渡
@@ -48,47 +63,63 @@ const chartOpen = () => {
         // 是否显示圆点
         symbol: "none",
       },
-      {
-        name: "土壤湿度",
-        data: [
-          [16, 42],
-          [17, 53],
-          [18, 80],
-          [19, 62],
-          [20, 77],
-        ],
-        type: "line",
-        smooth: true,
-        lineStyle: {
-          color: "rgb(0,30,200)",
-        },
-        // 折叠面积区域
-        areaStyle: {
-          color: "rgb(0,30,88)",
-        },
-        // 是否显示圆点
-        symbol: "none",
-      },
+      // {
+      //   name: "土壤湿度",
+      //   data: [
+      //     [16, 42],
+      //     [17, 53],
+      //     [18, 80],
+      //     [19, 62],
+      //     [20, 77],
+      //     [21, 72],
+      //     [22, 87],
+      //     [23, 72],
+      //     [24, 87],
+      //   ],
+      //   type: "line",
+      //   smooth: true,
+      //   lineStyle: {
+      //     color: "rgb(0,30,200)",
+      //   },
+      //   // 折叠面积区域
+      //   areaStyle: {
+      //     color: "rgb(0,30,88)",
+      //   },
+      //   // 是否显示圆点
+      //   symbol: "none",
+      // },
     ],
-    legend: {
-      data: [
-        {
-          name: "光照强度",
-          icon: "circle",
-        },
-        {
-          name: "土壤湿度",
-          icon: "circle",
-        },
-      ],
-      textStyle: {
-        //图例的文字样式
-        color: "#ffffff",
-        fontSize: (16 * window.innerWidth) / 1920,
-        fontWeight: 400,
-      },
-      top: "7%",
-      right: "32%",
+    // legend: {
+    //   data: [
+    //     {
+    //       name: "光照强度",
+    //       icon: "circle",
+    //     },
+    //     {
+    //       name: "土壤湿度",
+    //       icon: "circle",
+    //     },
+    //   ],
+    //   textStyle: {
+    //     //图例的文字样式
+    //     color: "#ffffff",
+    //     fontSize: (16 * window.innerWidth) / 1920,
+    //     fontWeight: 400,
+    //   },
+    //   top: "",
+    //   // right: "32%",
+    // },
+    grid: {
+      containLabel: true,
+      // left: "3%",
+      // height: "100%",
+      left: "2%",
+      right: "2%",
+      top: "2%",
+      bottom: "2%",
+    },
+    tooltip: {
+      show: true,
     },
   };
   mychart.setOption(chart.option);
@@ -96,26 +127,36 @@ const chartOpen = () => {
 onMounted(() => {
   chartPrepare();
   chartOpen();
-  window.addEventListener("resize", () => {
-    mychart.resize();
-    chartOpen();
-  });
+  window.addEventListener("resize", resize);
+});
+function resize() {
+  mychart.resize();
+}
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", resize);
+
+  mychart.dispose();
+  mychart = null;
 });
 </script>
 
 <style lang="less" scoped>
 .all {
   height: 100%;
+  width: 100%;
+  background-color: rgba(245, 246, 250, 0.1);
+  border-radius: 6px 6px 6px 6px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   h2 {
-    color: white;
+    color: #ffffff;
     font-weight: bold;
-    font-size: 0.25rem;
+    font-size: 30px;
     // height: 13.54%;
-    letter-spacing: 0.02rem;
+    letter-spacing: 6px;
+    margin: 10px 0 0 16px;
   }
   .content {
     flex: 1;

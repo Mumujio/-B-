@@ -28,9 +28,9 @@
       <div class="footer" ref="mychartDom"></div>
     </div>
   </div>
-  <div class="time">
+  <!-- <div class="time">
     {{ option.reporttime + "  " + option.hours + ":" + option.minutes }}
-  </div>
+  </div> -->
 </template>
 
 <script setup>
@@ -38,7 +38,14 @@ import {
   requestCurrentWeatherInfo,
   requestFutureWeatherInfo,
 } from "../../../request/requests";
-import { reactive, onMounted, computed, ref, inject } from "vue";
+import {
+  reactive,
+  onMounted,
+  computed,
+  ref,
+  inject,
+  onBeforeUnmount,
+} from "vue";
 // 时间实例
 
 // 天气接口数据
@@ -146,7 +153,7 @@ const chartOpen = () => {
         label: {
           show: true,
           position: "top",
-          fontSize: 15,
+          fontSize: (19 * window.innerWidth) / 1920,
           fontWeight: 400,
           color: "#ffffff",
         },
@@ -170,7 +177,7 @@ const chartOpen = () => {
         label: {
           show: true,
           position: "bottom",
-          fontSize: 15,
+          fontSize: (19 * window.innerWidth) / 1920,
           fontWeight: 400,
           color: "#ffffff",
         },
@@ -181,9 +188,12 @@ const chartOpen = () => {
     ],
     grid: {
       // height: "80%",
-      width: "115%",
+      width: "100%",
       // top: "-20%",
       left: "center",
+      top: "center",
+      // y: "10%",
+      // y2: "10%",
     },
   };
   mychart.setOption(chart.option);
@@ -191,34 +201,45 @@ const chartOpen = () => {
 
 // 传递父级
 const emits = defineEmits(["weatherComponentReady"]);
-onMounted(() => {
-  getNowTime();
-  getWeatherInfo();
+onMounted(async () => {
+  // getNowTime();
+  await getWeatherInfo();
   chartPrepare();
-  setTimeout(() => {
-    chartOpen();
-    console.log(option.weatherCurrentInfo);
-  }, 1000);
-  window.addEventListener("resize", () => {
-    mychart.resize();
-  });
+
+  chartOpen();
+
+  window.addEventListener("resize", resize);
+});
+function resize() {
+  mychart.resize();
+  chartOpen();
+}
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", resize);
+  if (mychart) {
+    mychart.dispose();
+    mychart = null;
+  }
 });
 </script>
 
 <style lang="less" scoped>
 .all {
+  width: 570px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: rgba(245, 246, 250, 0.1);
+  border-radius: 6px 6px 6px 6px;
 
   h2 {
-    color: white;
+    color: #ffffff;
     font-weight: bold;
-    font-size: 0.275rem;
-    // height: 9.14%;
-    padding-top: 0.43%;
-    padding-left: 4.44%;
+    font-size: 30px;
+    margin: 8px 0 31px 10px;
+
+    font-family: "PingFang SC-Bold, PingFang SC";
   }
   .content {
     flex: 1;
@@ -230,36 +251,35 @@ onMounted(() => {
       display: flex;
       // height: 38.68%;
       width: 100%;
+      flex: 1;
       justify-content: center;
       .header-text {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding-left: 7.3%;
+        padding-left: 39px;
         div {
-          font-size: 0.1875rem;
+          font-size: 22px;
           font-weight: 400;
+          color: #ffffff;
         }
       }
       .header-img {
         height: 100%;
 
         img {
-          height: 91.1%;
-          width: 98%;
+          height: 100%;
+          width: 100%;
         }
       }
     }
     .center {
       display: flex;
       align-items: center;
-      height: 23.58%;
+      margin: 55px 39px 8px 39px;
+      flex: 1;
       width: 100%;
-      padding-bottom: 1.56%;
-      // padding-left: 7.1%;
-      // width: 100%;
       .center-item {
-        height: 100%;
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -267,14 +287,16 @@ onMounted(() => {
         .center-time {
           // height: 36.39%;
           text-align: center;
-          font-size: 0.2rem;
+          font-size: 19px;
           font-weight: 400;
+          color: #ffffff;
         }
         .center-img {
           flex: 1;
+          margin-top: 4px;
           img {
-            width: 100%;
-            height: 100%;
+            width: 57px;
+            height: 57px;
           }
         }
       }
@@ -282,16 +304,8 @@ onMounted(() => {
     .footer {
       flex: 1;
       width: 100%;
-      padding-left: 7.1%;
+      margin: 0 39px;
     }
   }
-}
-.time {
-  position: absolute;
-  right: 0.4125rem;
-  top: 0.1625rem;
-  color: white;
-  font-size: 0.25rem;
-  font-weight: 400;
 }
 </style>
