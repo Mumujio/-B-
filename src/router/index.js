@@ -38,26 +38,26 @@ const routes = [
     component: () => import("../views/Login.vue"),
   },
   {
-    path: '/',
-    redirect:'/index'
-  }
+    path: "/",
+    redirect: "/index",
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),
   routes,
 });
-router.beforeEach((to, from, next) => {
-  let loginToken = localStorage.getItem('login') || ""
-  if (to.path != "/login" && !loginToken) {
-    next({ name:"login"})
-  } else {
-  next()
-  }
+// router.beforeEach((to, from, next) => {
+//   let loginToken = localStorage.getItem('login') || ""
+//   if (to.path != "/login" && !loginToken) {
+//     next({ name:"login"})
+//   } else {
+//   next()
+//   }
 
-});
- // 捕获路由错误
-router.beforeResolve((to, from, next) => { 
+// });
+// 捕获路由错误
+router.beforeResolve((to, from, next) => {
   if (to.matched.length === 0) {
     // 如果路由地址没有匹配项
     next({ name: "index" }); // 手动跳转到 404 页面
