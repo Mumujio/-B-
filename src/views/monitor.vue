@@ -45,7 +45,7 @@ import weather from "../components/home/rightContent/weather.vue";
 import plantDis from "@/components/home/rightContent/plantingDistribution.vue";
 import devStatis from "@/components/home/leftContent/deviceStatistics.vue";
 import equipMon from "@/components/home/leftContent/equipmentMonitor.vue";
-import { reactive, provide } from "@vue/reactivity";
+import { reactive } from "@vue/reactivity";
 import { requestProjectData, getUserInfos } from "@/request/requests";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";

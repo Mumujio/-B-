@@ -25,12 +25,6 @@
                   </template>
                 </el-input>
               </el-form-item>
-              <!-- <el-form-item style="margin-left: 70px">
-                <el-checkbox
-                  label="记住密码"
-                  v-model="form.checked"
-                ></el-checkbox>
-              </el-form-item> -->
             </el-form>
             <div class="main-form-login">
               <el-button type="primary" @click="login">登录</el-button>

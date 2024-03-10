@@ -2,13 +2,25 @@ const { defineConfig } = require("@vue/cli-service");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
+// defineConfig vue-cli的内置帮手函数，代码提示
 module.exports = defineConfig({
   transpileDependencies: true,
-
   lintOnSave: false,
   productionSourceMap: false,
-  configureWebpack: {
-    plugins: [new BundleAnalyzerPlugin()],
+  configureWebpack: (config) => {
+    if (process.env.NODE_ENV === "production") {
+      // 生产环境
+      return {
+        // plugins: [new BundleAnalyzerPlugin()],
+
+      };
+    } else {
+      // 开发环境
+      return {
+        plugins: [new BundleAnalyzerPlugin()],
+      };
+    }
+
     // optimization: {
     //   /**
     //    * runtimeChunk可选值有：true或'multiple'或'single'
@@ -44,4 +56,33 @@ module.exports = defineConfig({
     //   },
     // },
   },
+  chainWebpack: config => {
+    if (process.env.NODE_ENV === 'production') {
+      config.externals(assetsCDN.externals)
+     }
+  }
 });
+
+/**
+ * 静态CDN文件
+ */
+const assetsCDN = {
+  externals: {
+      // 左侧key为项目中引入的名称，右侧value为包对外提供的名称
+      vue: "Vue",
+      "vue-router": "VueRouter",
+      "element-plus": "ElementPlus",
+      echarts: "echarts",
+      axios: "axios",
+  },
+  css: [
+      'https://cdn.bootcdn.net/ajax/libs/element-plus/2.3.3/index.css'
+  ],
+  js: [
+      'https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.cjs.min.js',
+      'https://unpkg.com/vue-router@4.0.3/dist/vue-router.global.js',
+      "https://cdn.bootcdn.net/ajax/libs/element-plus/2.3.3/index.full.min.js",
+      'https://cdn.bootcdn.net/ajax/libs/echarts/5.4.1/echarts.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.min.js'
+  ]
+}

@@ -32,7 +32,6 @@ import curData from "@/components/control/center/curData.vue";
   position: absolute;
   width: 100%;
   height: 100%;
-  // background-image: url("../assets/indexPhoto/BG1.png");
   background-size: 100% 100%;
   background-image: url("@/assets/background2.png");
   z-index: -99;
