@@ -4726,7 +4726,7 @@
           flex-direction: column;
           justify-content: space-between;
           align-items: center;
-          padding: 9px 15px;
+          padding: 0.1px 15px;
           > div {
             display: flex;
             justify-content: space-between;
